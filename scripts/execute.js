@@ -19,7 +19,7 @@ async function main() {
   //CREATE2: hash(0xFF + sender + bytecode + salt) more detemerinistic. no nonce
   
   const AccountFactory = await hre.ethers.getContractFactory("AccountFactory"); //ether function to  deploy contracts
-  const [signer0] = await hre.ethers.getSigners();
+  const [signer0, signer1] = await hre.ethers.getSigners();
   const address0 = await signer0.getAddress();
   const initCode = "0x";
     // FACTORY_ADDRESS + 
@@ -39,14 +39,18 @@ async function main() {
         nonce: await entryPoint.getNonce(sender, 0), // nonce managed by entrypoint.
         initCode,
         callData: Account.interface.encodeFunctionData("execute"), //not tx calldata. but from tje smart acc
-        callGasLimit: 200_000,
-        verificationGasLimit: 200_000,
-        preVerificationGas: 50_000,
+        callGasLimit: 400_000,
+        verificationGasLimit: 400_000,
+        preVerificationGas: 100_000,
         maxFeePerGas: hre.ethers.parseUnits("10", "gwei"),
         maxPriorityFeePerGas: hre.ethers.parseUnits("5", "gwei"),
-        paymasterAndData: PM_ADDRESS,
+        paymasterAndData: PM_ADDRESS, //"0x"
         signature: "0x" //not important now, not validating
     };
+
+    const userOpHash = await entryPoint.getUserOpHash(userOp);
+    userOp.signature = signer0.signMessage(hre.ethers.getBytes(userOpHash))
+
 
     const tx = await entryPoint.handleOps([userOp], address0);
     const receipt = await tx.wait();
