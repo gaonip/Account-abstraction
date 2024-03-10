@@ -49,7 +49,7 @@ async function main() {
     };
 
     const userOpHash = await entryPoint.getUserOpHash(userOp);
-    userOp.signature = signer0.signMessage(hre.ethers.getBytes(userOpHash))
+    userOp.signature = signer0.signMessage(hre.ethers.getBytes(userOpHash));
 
 
     const tx = await entryPoint.handleOps([userOp], address0);
