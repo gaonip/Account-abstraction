@@ -2,13 +2,13 @@ const hre = require("hardhat");
 
 async function main() {
   //entrypoint
-  const ep = await hre.ethers.deployContract("EntryPoint");
+  // const ep = await hre.ethers.deployContract("EntryPoint");
 
-  await ep.waitForDeployment();
+  // await ep.waitForDeployment();
 
-  console.log(
-    `EP deployed to ${ep.target}`
-  );
+  // console.log(
+  //   `EP deployed to ${ep.target}`
+  // );
 
   //account factory
   const af = await hre.ethers.deployContract("AccountFactory");
